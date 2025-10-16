@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import Link from 'next/link'
 import { threadService } from '@/lib/database'
 import { formatTimeAgo } from '@/utils/subjectColors'
 import type { Thread } from '@/types/database'

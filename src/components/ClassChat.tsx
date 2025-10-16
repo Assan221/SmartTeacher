@@ -70,19 +70,15 @@ export default function ClassChat({ classId, className }: ClassChatProps) {
       let materialType: 'lesson_plan' | 'presentation' | 'test' | 'document' | null = null
       let title = ''
 
-      {/* eslint-disable-next-line react/no-unescaped-entities */}
       if (prompt.includes('план урока') || prompt.includes('урок') || response.includes('план урока')) {
         materialType = 'lesson_plan'
         title = `План урока для ${className}`
-        {/* eslint-disable-next-line react/no-unescaped-entities */}
       } else if (prompt.includes('презентация') || prompt.includes('презентация') || response.includes('презентация') || response.includes('слайд')) {
         materialType = 'presentation'
         title = `Презентация для ${className}`
-        {/* eslint-disable-next-line react/no-unescaped-entities */}
       } else if (prompt.includes('тест') || prompt.includes('задание') || response.includes('тест') || response.includes('вопрос')) {
         materialType = 'test'
         title = `Тест для ${className}`
-        {/* eslint-disable-next-line react/no-unescaped-entities */}
       } else if (prompt.includes('документ') || prompt.includes('файл') || response.includes('документ')) {
         materialType = 'document'
         title = `Документ для ${className}`
@@ -204,10 +200,10 @@ export default function ClassChat({ classId, className }: ClassChatProps) {
             <div className="mt-4 text-left bg-gray-50 rounded-lg p-4">
               <h4 className="font-semibold mb-2 text-gray-900">Примеры запросов:</h4>
               <ul className="space-y-1 text-sm text-gray-600">
-                <li>• "Создай план урока по математике"</li>
-                <li>• "Сделай презентацию по биологии"</li>
-                <li>• "Создай тест по истории"</li>
-                <li>• "Придумай домашнее задание"</li>
+                <li>• &quot;Создай план урока по математике&quot;</li>
+                <li>• &quot;Сделай презентацию по биологии&quot;</li>
+                <li>• &quot;Создай тест по истории&quot;</li>
+                <li>• &quot;Придумай домашнее задание&quot;</li>
               </ul>
             </div>
           </div>
