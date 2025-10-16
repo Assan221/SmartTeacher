@@ -16,9 +16,21 @@ interface ChatSidebarProps {
   onCloseSidebar?: () => void
 }
 
-export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, onThreadCreated, sidebarOpen, onCloseSidebar }: ChatSidebarProps) {
+export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, onThreadCreated, sidebarOpen }: ChatSidebarProps) {
   const [threads, setThreads] = useState<Thread[]>([])
   const [loading, setLoading] = useState(true)
+
+  const loadThreads = async () => {
+    try {
+      setLoading(true)
+      const data = await threadService.getThreads(classId!)
+      setThreads(data)
+    } catch (error) {
+      console.error('Ошибка загрузки чатов:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (classId) {
@@ -33,19 +45,7 @@ export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThr
     if (currentThreadId && classId) {
       loadThreads()
     }
-  }, [currentThreadId])
-
-  const loadThreads = async () => {
-    try {
-      setLoading(true)
-      const data = await threadService.getThreads(classId!)
-      setThreads(data)
-    } catch (error) {
-      console.error('Ошибка загрузки чатов:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  }, [currentThreadId, classId])
 
   const handleNewChat = () => {
     onNewChat()
