@@ -69,7 +69,7 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
       if (!currentThreadId && classId) {
         const newThread = await threadService.createThread({
           class_id: classId,
-          title: userMessage.content.substring(0, 50) + (userMessage.content.length > 50 ? &apos;...&apos; : &apos;&apos;)
+          title: userMessage.content.substring(0, 50) + (userMessage.content.length > 50 ? '...' : '')
         })
         currentThreadId = newThread.id
         
@@ -157,7 +157,7 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex gap-4 ${message.role === &apos;user&apos; ? &apos;justify-end&apos; : &apos;justify-start&apos;}`}
+              className={`flex gap-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {message.role === 'assistant' && (
                 <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-sm">
