@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SmartUstaz - Помощник учителя",
-  description: "Образовательная платформа для автоматизации работы учителей",
+  title: "Smart Teacher - ИИ Помощник для Учителей",
+  description: "Создавайте планы уроков, презентации и тесты с помощью ИИ. Современный чат-интерфейс для образовательных материалов.",
 };
 
 export default function RootLayout({

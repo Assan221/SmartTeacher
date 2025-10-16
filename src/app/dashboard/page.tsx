@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const { user, signOut } = useAuth()
   const [classes, setClasses] = useState<Class[]>([])
   const [loading, setLoading] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     loadClasses()
@@ -33,51 +34,58 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 flex">
-        {/* Боковое меню */}
-        <div className="w-64 bg-white shadow-lg flex flex-col">
-          {/* Заголовок */}
-          <div className="p-6 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-gray-900">SmartUstaz</h1>
-            <p className="text-sm text-gray-600 mt-1">Помощник учителя</p>
-          </div>
+      <div className="min-h-screen flex">
+        {/* Оверлей для мобильного меню */}
+        {sidebarOpen && (
+          <div 
+            className="mobile-only fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
-          {/* Меню */}
-          <nav className="flex-1 p-4">
-            <div className="space-y-2">
-              <Link
-                href="/dashboard/ai-chat"
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <span className="mr-3">🤖</span>
-                AI Чат
-              </Link>
-              {/* Классы */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Классы</h3>
-                  <button 
-                    onClick={() => {
-                      const title = prompt('Введите название класса (например: 5-А, 10-К):')
-                      if (title && title.trim()) {
-                        classService.createClass({ title: title.trim() }).then(() => {
-                          loadClasses()
-                        }).catch(console.error)
-                      }
-                    }}
-                    className="text-gray-400 text-gray-500 hover:text-gray-600 hover:text-gray-300"
-                    title="Создать новый класс"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                  </button>
-                </div>
+        {/* Боковая панель в стиле ChatGPT */}
+        <div className={`w-64 bg-neutral-50 border-r border-neutral-200 flex flex-col fixed left-0 top-0 h-full z-50 md:translate-x-0 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+              {/* Кнопки Новый чат и Добавить класс */}
+              <div className="p-4 border-b border-neutral-200">
+                <Link
+                  href="/dashboard/ai-chat"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  <svg className="w-4 h-4 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <span className="text-sm font-medium text-neutral-900">Новый чат</span>
+                </Link>
+                <button 
+                  onClick={() => {
+                    const title = prompt('Введите название класса (например: 5-А, 10-К):')
+                    if (title && title.trim()) {
+                      classService.createClass({ title: title.trim() }).then(() => {
+                        loadClasses()
+                      }).catch(console.error)
+                    }
+                  }}
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 transition-all duration-200 shadow-sm hover:shadow-md mt-2"
+                >
+                  <svg className="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <span className="text-sm font-medium text-violet-600">Добавить класс</span>
+                </button>
+              </div>
+
+              {/* Список классов */}
+              <div className="flex-1 overflow-y-auto p-3">
                 <div className="space-y-1">
                   {loading ? (
-                    <div className="text-sm text-gray-500">Загрузка...</div>
+                    <div className="text-center py-4">
+                      <div className="text-sm text-neutral-500">Загрузка классов...</div>
+                    </div>
                   ) : classes.length === 0 ? (
-                    <div className="text-sm text-gray-500">Нет классов</div>
+                    <div className="text-center py-8">
+                      <div className="text-sm text-neutral-500">Нет созданных классов</div>
+                      <div className="text-xs text-neutral-400 mt-1">Добавьте первый класс</div>
+                    </div>
                   ) : (
                     classes.map((classItem) => {
                       const subjectInfo = getSubjectColor(classItem.title)
@@ -85,130 +93,133 @@ export default function DashboardPage() {
                         <Link
                           key={classItem.id}
                           href={`/dashboard/class/${classItem.id}`}
-                          className="block w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-gray-100 hover:bg-gray-700 transition-colors"
+                          className="w-full text-left px-3 py-3 rounded-lg hover:bg-neutral-100 transition-colors group block"
                         >
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center gap-3">
                             <span className="text-lg">{subjectInfo.icon}</span>
-                            <span className="font-medium">{classItem.title}</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm text-neutral-700 truncate font-medium">{classItem.title}</div>
+                              <div className="text-xs text-neutral-500">Создан {formatTimeAgo(classItem.created_at)}</div>
+                            </div>
                           </div>
                         </Link>
                       )
                     })
                   )}
-                </div>
-              </div>
-
             </div>
-          </nav>
+          </div>
 
           {/* Профиль пользователя */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center space-x-3 mb-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
+          <div className="p-4 border-t border-neutral-200">
+            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 transition-colors cursor-pointer">
+              <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-sm">
                 {user?.email?.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
-                  {user?.email}
-                </p>
+                <div className="text-sm font-medium text-neutral-900 truncate">{user?.email}</div>
+                <div className="text-xs text-neutral-500">Учитель</div>
               </div>
+              <button
+                onClick={signOut}
+                className="p-2 rounded-lg hover:bg-neutral-200 transition-colors"
+                title="Выйти"
+              >
+                <svg className="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              </button>
             </div>
-            <button
-              onClick={signOut}
-              className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              {t('auth.logout')}
-            </button>
           </div>
         </div>
 
-        {/* Основная рабочая область */}
-        <div className="flex-1 flex flex-col">
-          {/* Заголовок рабочей области */}
-          <div className="bg-white shadow-sm border-b border-gray-200 p-6">
-            <h2 className="text-2xl font-semibold text-gray-900">{t('app.title')}</h2>
-            <p className="text-gray-600 mt-1">{t('app.subtitle')}</p>
+        {/* Основная область в стиле ChatGPT */}
+        <div className="flex-1 ml-64 chatgpt-main">
+          {/* Верхняя панель */}
+          <div className="border-b border-neutral-200 p-4 bg-white">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {/* Мобильное меню */}
+                <button 
+                  onClick={() => setSidebarOpen(!sidebarOpen)}
+                  className="md:hidden p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+                >
+                  <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+                
+                <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center shadow-sm">
+                  <span className="text-white text-sm font-semibold">ST</span>
+                </div>
+                <div>
+                  <h1 className="text-lg font-semibold text-neutral-900">Smart Teacher</h1>
+                  <p className="text-sm text-neutral-500 hidden md:block">Ваш ИИ-помощник для образования</p>
+                </div>
+              </div>
+              <Link
+                href="/dashboard/ai-chat"
+                className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-violet-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md"
+              >
+                Открыть чат
+              </Link>
+            </div>
           </div>
 
-          {/* Контент */}
-          <div className="flex-1 p-6 bg-gray-50">
-            <div className="max-w-6xl mx-auto">
-              {/* Приветствие */}
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-white mb-8">
-                <h3 className="text-2xl font-bold mb-2">Добро пожаловать в SmartUstaz!</h3>
-                <p className="text-blue-100">
-                  Создавайте планы уроков, презентации и тесты с помощью ИИ. 
-                  Выберите класс в меню слева или создайте новый.
+          {/* Основной контент */}
+          <div className="flex-1 p-6 bg-neutral-50">
+            <div className="max-w-4xl mx-auto">
+              {/* Приветственный экран */}
+              <div className="text-center py-16">
+                <div className="w-20 h-20 bg-gradient-to-br from-violet-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                  <span className="text-3xl">🎓</span>
+                </div>
+                <h2 className="text-3xl font-bold text-neutral-900 mb-4">Добро пожаловать в Smart Teacher</h2>
+                <p className="text-lg text-neutral-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+                  Создавайте образовательные материалы с помощью ИИ. Презентации, домашние задания и другие материалы — все в одном современном интерфейсе.
                 </p>
               </div>
 
               {/* Быстрые действия */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="text-3xl mb-4">🏫</div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Создать класс</h4>
-                  <p className="text-gray-600 text-sm">Добавьте новый класс для организации материалов</p>
-                </div>
-
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 <Link
                   href="/dashboard/ai-chat"
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer block"
+                  className="bg-white p-6 rounded-xl border border-neutral-200 hover:shadow-md hover:border-neutral-300 transition-all duration-200 group cursor-pointer"
                 >
-                  <div className="text-3xl mb-4">📚</div>
-                  <h4 className="font-semibold text-gray-900 mb-2">План урока</h4>
-                  <p className="text-gray-600 text-sm">Создайте план урока с помощью ИИ</p>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200">
+                      <span className="text-2xl">📊</span>
+                    </div>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Презентация</h3>
+                    <p className="text-sm text-neutral-600 leading-relaxed">Интерактивная презентация для урока</p>
+                  </div>
                 </Link>
 
                 <Link
                   href="/dashboard/ai-chat"
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer block"
+                  className="bg-white p-6 rounded-xl border border-neutral-200 hover:shadow-md hover:border-neutral-300 transition-all duration-200 group cursor-pointer"
                 >
-                  <div className="text-3xl mb-4">📊</div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Презентация</h4>
-                  <p className="text-gray-600 text-sm">Создайте презентацию для урока</p>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-14 h-14 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200">
+                      <span className="text-2xl">📝</span>
+                    </div>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Домашнее задание</h3>
+                    <p className="text-sm text-neutral-600 leading-relaxed">Разнообразные задания для проверки знаний</p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/dashboard/ai-chat"
+                  className="bg-white p-6 rounded-xl border border-neutral-200 hover:shadow-md hover:border-neutral-300 transition-all duration-200 group cursor-pointer"
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200">
+                      <span className="text-2xl">🤖</span>
+                    </div>
+                    <h3 className="font-semibold text-neutral-900 mb-2">ИИ Помощник</h3>
+                    <p className="text-sm text-neutral-600 leading-relaxed">Создание материалов с помощью ИИ</p>
+                  </div>
                 </Link>
               </div>
-
-              {/* Недавние классы */}
-              {classes.length > 0 && (
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                  <h4 className="font-semibold text-gray-900 mb-4">Ваши классы</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {classes.slice(0, 6).map((classItem) => {
-                      const subjectInfo = getSubjectColor(classItem.title)
-                      return (
-                        <Link
-                          key={classItem.id}
-                          href={`/dashboard/class/${classItem.id}`}
-                          className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition-all"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-12 h-12 rounded-lg ${subjectInfo.bgColor} flex items-center justify-center`}>
-                              <span className="text-2xl">{subjectInfo.icon}</span>
-                            </div>
-                            <div className="flex-1">
-                              <h5 className="font-medium text-gray-900">{classItem.title}</h5>
-                              <p className="text-sm text-gray-500">
-                                Создан {formatTimeAgo(classItem.created_at)}
-                              </p>
-                            </div>
-                          </div>
-                        </Link>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Если нет классов */}
-              {classes.length === 0 && !loading && (
-                <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-                  <div className="text-6xl mb-4">🏫</div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">У вас пока нет классов</h3>
-                  <p className="text-gray-600 mb-4">Создайте свой первый класс, чтобы начать работу</p>
-                  <ClassManager />
-                </div>
-              )}
             </div>
           </div>
         </div>
