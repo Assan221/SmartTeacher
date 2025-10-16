@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { aiService, type ChatMessage } from '@/lib/openai'
 import { messageService, threadService } from '@/lib/database'
-import type { CreateMessage, CreateThread, Thread } from '@/types/database'
+import type { CreateMessage, CreateThread } from '@/types/database'
 
 interface ChatInterfaceProps {
   threadId?: string
@@ -22,7 +22,7 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
     if (threadId) {
       loadMessages()
     }
-  }, [threadId])
+  }, [threadId, loadMessages])
 
   useEffect(() => {
     scrollToBottom()
@@ -32,7 +32,7 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async () => {
     if (!threadId) return
 
     try {
@@ -45,7 +45,7 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
     } catch (error) {
       console.error('Ошибка загрузки сообщений:', error)
     }
-  }
+  }, [threadId])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()

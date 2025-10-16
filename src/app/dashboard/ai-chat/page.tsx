@@ -6,13 +6,11 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import ChatInterface from '@/components/ChatInterface'
 import ChatSidebar from '@/components/ChatSidebar'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { classService } from '@/lib/database'
 import type { Class } from '@/types/database'
 
 export default function AIChatPage() {
   const { user, signOut } = useAuth()
-  const router = useRouter()
   const [currentThreadId, setCurrentThreadId] = useState<string | undefined>()
   const [selectedClassId, setSelectedClassId] = useState<string | undefined>()
   const [classes, setClasses] = useState<Class[]>([])
