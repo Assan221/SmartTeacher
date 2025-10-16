@@ -70,17 +70,21 @@ export default function ClassChat({ classId, className }: ClassChatProps) {
       let materialType: 'lesson_plan' | 'presentation' | 'test' | 'document' | null = null
       let title = ''
 
-      if (prompt.includes(&apos;план урока&apos;) || prompt.includes(&apos;урок&apos;) || response.includes(&apos;план урока&apos;)) {
-        materialType = &apos;lesson_plan&apos;
+      {/* eslint-disable-next-line react/no-unescaped-entities */}
+      if (prompt.includes('план урока') || prompt.includes('урок') || response.includes('план урока')) {
+        materialType = 'lesson_plan'
         title = `План урока для ${className}`
-      } else if (prompt.includes(&apos;презентация&apos;) || prompt.includes(&apos;презентация&apos;) || response.includes(&apos;презентация&apos;) || response.includes(&apos;слайд&apos;)) {
-        materialType = &apos;presentation&apos;
+        {/* eslint-disable-next-line react/no-unescaped-entities */}
+      } else if (prompt.includes('презентация') || prompt.includes('презентация') || response.includes('презентация') || response.includes('слайд')) {
+        materialType = 'presentation'
         title = `Презентация для ${className}`
-      } else if (prompt.includes(&apos;тест&apos;) || prompt.includes(&apos;задание&apos;) || response.includes(&apos;тест&apos;) || response.includes(&apos;вопрос&apos;)) {
-        materialType = &apos;test&apos;
+        {/* eslint-disable-next-line react/no-unescaped-entities */}
+      } else if (prompt.includes('тест') || prompt.includes('задание') || response.includes('тест') || response.includes('вопрос')) {
+        materialType = 'test'
         title = `Тест для ${className}`
-      } else if (prompt.includes(&apos;документ&apos;) || prompt.includes(&apos;файл&apos;) || response.includes(&apos;документ&apos;)) {
-        materialType = &apos;document&apos;
+        {/* eslint-disable-next-line react/no-unescaped-entities */}
+      } else if (prompt.includes('документ') || prompt.includes('файл') || response.includes('документ')) {
+        materialType = 'document'
         title = `Документ для ${className}`
       }
 
@@ -212,7 +216,7 @@ export default function ClassChat({ classId, className }: ClassChatProps) {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex ${message.role === &apos;user&apos; ? &apos;justify-end&apos; : &apos;justify-start&apos;}`}
+            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div className="max-w-3xl">
               <div
