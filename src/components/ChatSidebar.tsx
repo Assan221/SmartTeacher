@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { threadService } from '@/lib/database'
 import { formatTimeAgo } from '@/utils/subjectColors'
@@ -11,16 +11,14 @@ interface ChatSidebarProps {
   currentThreadId?: string
   onNewChat: () => void
   onThreadSelect: (threadId: string) => void
-  onThreadCreated?: (threadId: string) => void
   sidebarOpen?: boolean
-  onCloseSidebar?: () => void
 }
 
-export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, onThreadCreated, sidebarOpen }: ChatSidebarProps) {
+export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, sidebarOpen }: ChatSidebarProps) {
   const [threads, setThreads] = useState<Thread[]>([])
   const [loading, setLoading] = useState(true)
 
-  const loadThreads = async () => {
+  const loadThreads = useCallback(async () => {
     try {
       setLoading(true)
       const data = await threadService.getThreads(classId!)
@@ -30,7 +28,7 @@ export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThr
     } finally {
       setLoading(false)
     }
-  }
+  }, [classId])
 
   useEffect(() => {
     if (classId) {
@@ -38,14 +36,14 @@ export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThr
     } else {
       setThreads([])
     }
-  }, [classId])
+  }, [classId, loadThreads])
 
   // Обновляем список чатов при создании нового треда
   useEffect(() => {
     if (currentThreadId && classId) {
       loadThreads()
     }
-  }, [currentThreadId, classId])
+  }, [currentThreadId, classId, loadThreads])
 
   const handleNewChat = () => {
     onNewChat()
