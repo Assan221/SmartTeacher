@@ -10,7 +10,6 @@ import { formatTimeAgo } from '@/utils/subjectColors'
 import type { Material } from '@/types/database'
 
 export default function MaterialViewPage() {
-  const { user } = useAuth()
   const params = useParams()
   const router = useRouter()
   const materialId = params.id as string

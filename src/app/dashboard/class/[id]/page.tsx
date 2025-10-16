@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
@@ -26,9 +26,9 @@ export default function ClassDetailPage() {
       loadClassData()
       loadMaterials()
     }
-  }, [classId])
+  }, [classId, loadClassData, loadMaterials])
 
-  const loadClassData = async () => {
+  const loadClassData = useCallback(async () => {
     try {
       const classes = await classService.getClasses()
       const classItem = classes.find(c => c.id === classId)
@@ -36,9 +36,9 @@ export default function ClassDetailPage() {
     } catch (error) {
       console.error('Ошибка загрузки класса:', error)
     }
-  }
+  }, [classId])
 
-  const loadMaterials = async () => {
+  const loadMaterials = useCallback(async () => {
     try {
       const data = await materialService.getMaterials(classId)
       setMaterials(data)
@@ -47,15 +47,12 @@ export default function ClassDetailPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [classId])
 
   const getMaterialsByType = (type: Material['type']) => {
     return materials.filter(m => m.type === type)
   }
 
-  const getRecentMaterials = () => {
-    return materials.slice(0, 5)
-  }
 
   if (loading) {
     return (
