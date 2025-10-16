@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { aiService, type ChatMessage } from '@/lib/openai'
 import { messageService, threadService } from '@/lib/database'
-import type { CreateMessage, CreateThread } from '@/types/database'
 
 interface ChatInterfaceProps {
   threadId?: string

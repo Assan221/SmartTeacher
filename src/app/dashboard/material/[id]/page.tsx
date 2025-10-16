@@ -109,7 +109,7 @@ export default function MaterialViewPage() {
               
               <div className="flex items-center space-x-3">
                 <PDFExporter
-                  content={material.content}
+                  content={material.content || ''}
                   title={material.title}
                   className="text-sm"
                 />
