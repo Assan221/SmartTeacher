@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { aiService, type ChatMessage } from '@/lib/openai'
-import { messageService, materialService } from '@/lib/database'
+import { materialService } from '@/lib/database'
 import PDFExporter from './PDFExporter'
-import type { CreateMessage, CreateMaterial } from '@/types/database'
 
 interface ClassChatProps {
   classId: string
@@ -68,20 +67,20 @@ export default function ClassChat({ classId, className }: ClassChatProps) {
       const prompt = userPrompt.toLowerCase()
       const response = aiResponse.toLowerCase()
 
-      let materialType: 'lesson_plan' | 'presentation' | 'test' | 'document' | null = null
+      let materialType: &apos;lesson_plan&apos; | &apos;presentation&apos; | &apos;test&apos; | &apos;document&apos; | null = null
       let title = ''
 
-      if (prompt.includes('план урока') || prompt.includes('урок') || response.includes('план урока')) {
-        materialType = 'lesson_plan'
+      if (prompt.includes(&apos;план урока&apos;) || prompt.includes(&apos;урок&apos;) || response.includes(&apos;план урока&apos;)) {
+        materialType = &apos;lesson_plan&apos;
         title = `План урока для ${className}`
-      } else if (prompt.includes('презентация') || prompt.includes('презентация') || response.includes('презентация') || response.includes('слайд')) {
-        materialType = 'presentation'
+      } else if (prompt.includes(&apos;презентация&apos;) || prompt.includes(&apos;презентация&apos;) || response.includes(&apos;презентация&apos;) || response.includes(&apos;слайд&apos;)) {
+        materialType = &apos;presentation&apos;
         title = `Презентация для ${className}`
-      } else if (prompt.includes('тест') || prompt.includes('задание') || response.includes('тест') || response.includes('вопрос')) {
-        materialType = 'test'
+      } else if (prompt.includes(&apos;тест&apos;) || prompt.includes(&apos;задание&apos;) || response.includes(&apos;тест&apos;) || response.includes(&apos;вопрос&apos;)) {
+        materialType = &apos;test&apos;
         title = `Тест для ${className}`
-      } else if (prompt.includes('документ') || prompt.includes('файл') || response.includes('документ')) {
-        materialType = 'document'
+      } else if (prompt.includes(&apos;документ&apos;) || prompt.includes(&apos;файл&apos;) || response.includes(&apos;документ&apos;)) {
+        materialType = &apos;document&apos;
         title = `Документ для ${className}`
       }
 
@@ -213,7 +212,7 @@ export default function ClassChat({ classId, className }: ClassChatProps) {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${message.role === &apos;user&apos; ? &apos;justify-end&apos; : &apos;justify-start&apos;}`}
           >
             <div className="max-w-3xl">
               <div
