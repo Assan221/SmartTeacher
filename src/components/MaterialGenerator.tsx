@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { aiService } from '@/lib/openai'
 import { materialService } from '@/lib/database'
-import type { CreateMaterial } from '@/types/database'
 
 interface MaterialGeneratorProps {
   classId: string
@@ -289,7 +288,7 @@ export default function MaterialGenerator({ classId, onMaterialCreated }: Materi
               <label className="block text-sm font-medium text-gray-700 mb-2">Стиль</label>
               <select
                 value={presentationForm.style}
-                onChange={(e) => setPresentationForm(prev => ({ ...prev, style: e.target.value as any }))}
+                onChange={(e) => setPresentationForm(prev => ({ ...prev, style: e.target.value as 'academic' | 'creative' | 'minimal' }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               >
                 <option value="academic">Академический</option>
@@ -351,7 +350,7 @@ export default function MaterialGenerator({ classId, onMaterialCreated }: Materi
               <label className="block text-sm font-medium text-gray-700 mb-2">Сложность</label>
               <select
                 value={testForm.difficulty}
-                onChange={(e) => setTestForm(prev => ({ ...prev, difficulty: e.target.value as any }))}
+                onChange={(e) => setTestForm(prev => ({ ...prev, difficulty: e.target.value as 'easy' | 'medium' | 'hard' }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               >
                 <option value="easy">Легкий</option>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { classService } from '@/lib/database'
-import type { Class, CreateClass } from '@/types/database'
+import type { Class } from '@/types/database'
 
 export default function ClassManager() {
   const [classes, setClasses] = useState<Class[]>([])
