@@ -3,11 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import ClassManager from '@/components/ClassManager'
 import Link from 'next/link'
 import { classService } from '@/lib/database'
 import { getSubjectColor, formatTimeAgo } from '@/utils/subjectColors'
-import { t } from '@/i18n'
 import type { Class } from '@/types/database'
 
 export default function DashboardPage() {

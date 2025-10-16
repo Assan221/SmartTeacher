@@ -17,16 +17,6 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
   const [error, setError] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (threadId) {
-      loadMessages()
-    }
-  }, [threadId, loadMessages])
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -45,6 +35,16 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
       console.error('Ошибка загрузки сообщений:', error)
     }
   }, [threadId])
+
+  useEffect(() => {
+    if (threadId) {
+      loadMessages()
+    }
+  }, [threadId, loadMessages])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
