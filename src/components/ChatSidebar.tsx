@@ -10,12 +10,10 @@ interface ChatSidebarProps {
   currentThreadId?: string
   onNewChat: () => void
   onThreadSelect: (threadId: string) => void
-  onThreadCreated?: (threadId: string) => void
   sidebarOpen?: boolean
-  onCloseSidebar?: () => void
 }
 
-export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, onThreadCreated, sidebarOpen, onCloseSidebar }: ChatSidebarProps) {
+export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, sidebarOpen }: ChatSidebarProps) {
   const [threads, setThreads] = useState<Thread[]>([])
   const [loading, setLoading] = useState(true)
 

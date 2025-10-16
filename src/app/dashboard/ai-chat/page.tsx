@@ -66,9 +66,7 @@ export default function AIChatPage() {
           currentThreadId={currentThreadId}
           onNewChat={handleNewChat}
           onThreadSelect={handleThreadSelect}
-          onThreadCreated={handleNewThread}
           sidebarOpen={sidebarOpen}
-          onCloseSidebar={() => setSidebarOpen(false)}
         />
 
         {/* Основная область чата в стиле ChatGPT */}

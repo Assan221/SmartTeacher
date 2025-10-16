@@ -263,7 +263,7 @@ export default function ClassDetailPage() {
                               Открыть
                             </Link>
                             <PDFExporter
-                              content={material.content}
+                              content={material.content || ''}
                               title={material.title}
                               className="text-xs px-2 py-1"
                             />
@@ -325,7 +325,7 @@ export default function ClassDetailPage() {
                               Открыть
                             </Link>
                             <PDFExporter
-                              content={material.content}
+                              content={material.content || ''}
                               title={material.title}
                               className="text-xs px-2 py-1"
                             />
@@ -387,7 +387,7 @@ export default function ClassDetailPage() {
                               Открыть
                             </Link>
                             <PDFExporter
-                              content={material.content}
+                              content={material.content || ''}
                               title={material.title}
                               className="text-xs px-2 py-1"
                             />
@@ -450,7 +450,7 @@ export default function ClassDetailPage() {
                               Открыть
                             </Link>
                             <PDFExporter
-                              content={material.content}
+                              content={material.content || ''}
                               title={material.title}
                               className="text-xs px-2 py-1"
                             />
