@@ -21,13 +21,6 @@ export default function ClassDetailPage() {
   const [activeSection, setActiveSection] = useState('chat')
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (classId) {
-      loadClassData()
-      loadMaterials()
-    }
-  }, [classId, loadClassData, loadMaterials])
-
   const loadClassData = useCallback(async () => {
     try {
       const classes = await classService.getClasses()
@@ -48,6 +41,13 @@ export default function ClassDetailPage() {
       setLoading(false)
     }
   }, [classId])
+
+  useEffect(() => {
+    if (classId) {
+      loadClassData()
+      loadMaterials()
+    }
+  }, [classId, loadClassData, loadMaterials])
 
   const getMaterialsByType = (type: Material['type']) => {
     return materials.filter(m => m.type === type)

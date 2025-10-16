@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { materialService } from '@/lib/database'
 import PDFExporter from '@/components/PDFExporter'
@@ -18,23 +17,23 @@ export default function MaterialViewPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    const fetchMaterial = async () => {
-      try {
-        const data = await materialService.getMaterial(materialId)
-        setMaterial(data)
-      } catch (error) {
-        console.error('Ошибка загрузки материала:', error)
-        setError('Не удалось загрузить материал')
-      } finally {
-        setLoading(false)
-      }
+  const fetchMaterial = useCallback(async () => {
+    try {
+      const data = await materialService.getMaterial(materialId)
+      setMaterial(data)
+    } catch (error) {
+      console.error('Ошибка загрузки материала:', error)
+      setError('Не удалось загрузить материал')
+    } finally {
+      setLoading(false)
     }
+  }, [materialId])
 
+  useEffect(() => {
     if (materialId) {
       fetchMaterial()
     }
-  }, [materialId])
+  }, [materialId, fetchMaterial])
 
   const handleDelete = async () => {
     if (!material) return
