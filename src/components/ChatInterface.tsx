@@ -79,7 +79,11 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
       }
 
       const messagesToSend = [...messages, userMessage]
-      const assistantMessage = await aiService.chat(messagesToSend)
+      const assistantContent = await aiService.chat(messagesToSend)
+      const assistantMessage: ChatMessage = {
+        role: 'assistant',
+        content: assistantContent
+      }
       
       setMessages(prev => [...prev, assistantMessage])
 
@@ -93,7 +97,7 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
         
         await messageService.createMessage({
           thread_id: currentThreadId,
-          role: 'assistant',
+          role: assistantMessage.role,
           content: assistantMessage.content
         })
       }
