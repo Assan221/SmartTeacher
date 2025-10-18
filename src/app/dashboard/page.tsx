@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Link from 'next/link'
 import { classService } from '@/lib/database'
@@ -9,7 +8,6 @@ import { getSubjectColor, formatTimeAgo } from '@/utils/subjectColors'
 import type { Class } from '@/types/database'
 
 export default function DashboardPage() {
-  const { user, signOut } = useAuth()
   const [classes, setClasses] = useState<Class[]>([])
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -111,14 +109,13 @@ export default function DashboardPage() {
           <div className="p-4 border-t border-neutral-200">
             <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-100 transition-colors cursor-pointer">
               <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-sm">
-                {user?.email?.charAt(0).toUpperCase()}
+                ST
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-neutral-900 truncate">{user?.email}</div>
+                <div className="text-sm font-medium text-neutral-900 truncate">Smart Teacher</div>
                 <div className="text-xs text-neutral-500">Учитель</div>
               </div>
               <button
-                onClick={signOut}
                 className="p-2 rounded-lg hover:bg-neutral-200 transition-colors"
                 title="Выйти"
               >

@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useState, useEffect, useCallback } from 'react'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import ChatInterface from '@/components/ChatInterface'
 import ChatSidebar from '@/components/ChatSidebar'
@@ -10,20 +9,13 @@ import { classService } from '@/lib/database'
 import type { Class } from '@/types/database'
 
 export default function AIChatPage() {
-  const { user, signOut } = useAuth()
   const [currentThreadId, setCurrentThreadId] = useState<string | undefined>()
   const [selectedClassId, setSelectedClassId] = useState<string | undefined>()
   const [classes, setClasses] = useState<Class[]>([])
-  const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  useEffect(() => {
-    loadClasses()
-  }, [])
-
-  const loadClasses = async () => {
+  const loadClasses = useCallback(async () => {
     try {
-      setLoading(true)
       const data = await classService.getClasses()
       setClasses(data)
       // Автоматически выбираем первый класс, если есть
@@ -32,10 +24,12 @@ export default function AIChatPage() {
       }
     } catch (error) {
       console.error('Ошибка загрузки классов:', error)
-    } finally {
-      setLoading(false)
     }
-  }
+  }, [selectedClassId])
+
+  useEffect(() => {
+    loadClasses()
+  }, [loadClasses])
 
   const handleNewChat = () => {
     setCurrentThreadId(undefined)

@@ -72,7 +72,7 @@ export const classService = {
       return demoClasses
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabase!
       .from('classes')
       .select('*')
       .order('created_at', { ascending: false })
@@ -88,12 +88,15 @@ export const classService = {
         id: `demo-class-${Date.now()}`,
         ...classData,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
         user_id: 'demo-user'
       }
       demoClasses.unshift(newClass)
-      console.log('Создан демо-класс:', newClass.name)
+      console.log('Создан демо-класс:', newClass.title)
       return newClass
+    }
+
+    if (!supabase) {
+      throw new Error('Supabase не настроен')
     }
 
     const { data, error } = await supabase

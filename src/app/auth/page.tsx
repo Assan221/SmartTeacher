@@ -38,7 +38,7 @@ export default function AuthPage() {
           setMessage('Регистрация выполнена! Проверьте email для подтверждения.')
         }
       }
-    } catch (err) {
+    } catch {
       setError('Произошла ошибка')
     } finally {
       setLoading(false)
