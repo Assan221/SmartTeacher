@@ -99,6 +99,10 @@ export const classService = {
       throw new Error('Supabase не настроен')
     }
 
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
+    }
+
     const { data, error } = await supabase
       .from('classes')
       .insert(classData)
@@ -127,6 +131,10 @@ export const classService = {
       throw new Error('Supabase не настроен')
     }
 
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
+    }
+
     const { data, error } = await supabase
       .from('classes')
       .update(updates)
@@ -153,6 +161,10 @@ export const classService = {
       throw new Error('Supabase не настроен')
     }
 
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
+    }
+
     const { error } = await supabase
       .from('classes')
       .delete()
@@ -175,6 +187,10 @@ export const threadService = {
       throw new Error('Supabase не настроен')
     }
 
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
+    }
+
     const { data, error } = await supabase
       .from('threads')
       .select('*')
@@ -190,13 +206,16 @@ export const threadService = {
     if (!isSupabaseAvailable()) {
       const newThread: Thread = {
         id: `demo-thread-${Date.now()}`,
-        ...threadData,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        user_id: 'demo-user'
+        class_id: threadData.class_id,
+        title: threadData.title || 'Новый чат',
+        created_at: new Date().toISOString()
       }
       console.log('Создан демо-тред:', newThread.title)
       return newThread
+    }
+
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
     }
 
     const { data, error } = await supabase
@@ -213,6 +232,10 @@ export const threadService = {
   async updateThread(id: string, updates: UpdateThread): Promise<Thread> {
     if (!isSupabaseAvailable()) {
       throw new Error('Обновление тредов в демо-режиме не поддерживается')
+    }
+
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
     }
 
     const { data, error } = await supabase
@@ -233,6 +256,10 @@ export const threadService = {
       return
     }
 
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
+    }
+
     const { error } = await supabase
       .from('threads')
       .delete()
@@ -251,6 +278,10 @@ export const messageService = {
       return [] // Пока пустой массив для сообщений
     }
 
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
+    }
+
     const { data, error } = await supabase
       .from('messages')
       .select('*')
@@ -267,11 +298,14 @@ export const messageService = {
       const newMessage: Message = {
         id: `demo-message-${Date.now()}`,
         ...messageData,
-        created_at: new Date().toISOString(),
-        user_id: 'demo-user'
+        created_at: new Date().toISOString()
       }
       console.log('Создано демо-сообщение:', newMessage.content.substring(0, 50))
       return newMessage
+    }
+
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
     }
 
     const { data, error } = await supabase
@@ -289,6 +323,10 @@ export const messageService = {
     if (!isSupabaseAvailable()) {
       console.log('Удалено демо-сообщение с ID:', id)
       return
+    }
+
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
     }
 
     const { error } = await supabase
@@ -309,6 +347,10 @@ export const materialService = {
       return demoMaterials.filter(m => m.class_id === classId)
     }
 
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
+    }
+
     const { data, error } = await supabase
       .from('materials')
       .select('*')
@@ -323,6 +365,10 @@ export const materialService = {
   async getMaterialsByType(classId: string, type: Material['type']): Promise<Material[]> {
     if (!isSupabaseAvailable()) {
       return demoMaterials.filter(m => m.class_id === classId && m.type === type)
+    }
+
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
     }
 
     const { data, error } = await supabase
@@ -344,6 +390,10 @@ export const materialService = {
       return material
     }
 
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
+    }
+
     const { data, error } = await supabase
       .from('materials')
       .select('*')
@@ -359,14 +409,22 @@ export const materialService = {
     if (!isSupabaseAvailable()) {
       const newMaterial: Material = {
         id: `demo-material-${Date.now()}`,
-        ...materialData,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        user_id: 'demo-user'
+        class_id: materialData.class_id,
+        thread_id: materialData.thread_id || null,
+        type: materialData.type,
+        title: materialData.title,
+        content: materialData.content || null,
+        file_url: materialData.file_url || null,
+        ai_generated: materialData.ai_generated || false,
+        created_at: new Date().toISOString()
       }
       demoMaterials.unshift(newMaterial)
       console.log('Создан демо-материал:', newMaterial.title)
       return newMaterial
+    }
+
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
     }
 
     const { data, error } = await supabase
@@ -387,11 +445,14 @@ export const materialService = {
       
       demoMaterials[materialIndex] = {
         ...demoMaterials[materialIndex],
-        ...updates,
-        updated_at: new Date().toISOString()
+        ...updates
       }
       console.log('Обновлен демо-материал:', demoMaterials[materialIndex].title)
       return demoMaterials[materialIndex]
+    }
+
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
     }
 
     const { data, error } = await supabase
@@ -414,6 +475,10 @@ export const materialService = {
         console.log('Удален демо-материал с ID:', id)
       }
       return
+    }
+
+    if (!supabase) {
+      throw new Error("Supabase не настроен")
     }
 
     const { error } = await supabase
