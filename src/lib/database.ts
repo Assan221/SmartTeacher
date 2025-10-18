@@ -17,32 +17,20 @@ import type {
 const demoClasses: Class[] = [
   {
     id: 'demo-class-1',
-    name: '9-й класс "Е"',
-    subject: 'Математика',
-    description: 'Основы алгебры и геометрии',
-    color: '#3B82F6',
+    title: '9-й класс "Е"',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
     user_id: 'demo-user'
   },
   {
     id: 'demo-class-2',
-    name: '10-й класс "А"',
-    subject: 'Физика',
-    description: 'Механика и термодинамика',
-    color: '#10B981',
+    title: '10-й класс "А"',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
     user_id: 'demo-user'
   },
   {
     id: 'demo-class-3',
-    name: '11-й класс "Б"',
-    subject: 'Химия',
-    description: 'Органическая и неорганическая химия',
-    color: '#F59E0B',
+    title: '11-й класс "Б"',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
     user_id: 'demo-user'
   }
 ]

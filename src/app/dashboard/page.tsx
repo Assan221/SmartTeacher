@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Link from 'next/link'
@@ -14,11 +14,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  useEffect(() => {
-    loadClasses()
-  }, [])
-
-  const loadClasses = async () => {
+  const loadClasses = useCallback(async () => {
     try {
       setLoading(true)
       const data = await classService.getClasses()
@@ -28,7 +24,11 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadClasses()
+  }, [loadClasses])
 
   return (
     <ProtectedRoute>
