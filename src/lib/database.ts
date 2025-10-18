@@ -39,24 +39,24 @@ const demoMaterials: Material[] = [
   {
     id: 'demo-material-1',
     class_id: 'demo-class-1',
+    thread_id: null,
     title: 'Квадратные уравнения',
     type: 'lesson_plan',
     content: 'План урока по решению квадратных уравнений',
+    file_url: null,
     ai_generated: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    user_id: 'demo-user'
+    created_at: new Date().toISOString()
   },
   {
     id: 'demo-material-2',
     class_id: 'demo-class-1',
+    thread_id: null,
     title: 'Геометрические фигуры',
     type: 'presentation',
     content: 'Презентация о треугольниках и четырехугольниках',
+    file_url: null,
     ai_generated: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    user_id: 'demo-user'
+    created_at: new Date().toISOString()
   }
 ]
 
