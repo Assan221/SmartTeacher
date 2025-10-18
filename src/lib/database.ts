@@ -117,11 +117,14 @@ export const classService = {
       
       demoClasses[classIndex] = {
         ...demoClasses[classIndex],
-        ...updates,
-        updated_at: new Date().toISOString()
+        ...updates
       }
-      console.log('Обновлен демо-класс:', demoClasses[classIndex].name)
+      console.log('Обновлен демо-класс:', demoClasses[classIndex].title)
       return demoClasses[classIndex]
+    }
+
+    if (!supabase) {
+      throw new Error('Supabase не настроен')
     }
 
     const { data, error } = await supabase
@@ -146,6 +149,10 @@ export const classService = {
       return
     }
 
+    if (!supabase) {
+      throw new Error('Supabase не настроен')
+    }
+
     const { error } = await supabase
       .from('classes')
       .delete()
@@ -162,6 +169,10 @@ export const threadService = {
     if (!isSupabaseAvailable()) {
       console.log('Используем демо-данные для тредов')
       return [] // Пока пустой массив для тредов
+    }
+
+    if (!supabase) {
+      throw new Error('Supabase не настроен')
     }
 
     const { data, error } = await supabase
