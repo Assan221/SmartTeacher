@@ -2,8 +2,13 @@
 export type Language = 'ru' | 'kk' | 'en'
 export type TranslationKey = string
 
+// Тип для объекта переводов с индексной сигнатурой
+type TranslationObject = {
+  [key: string]: string
+}
+
 // Словари переводов
-export const translations = {
+export const translations: Record<Language, TranslationObject> = {
   ru: {
     // Общие
     'app.title': 'SmartUstaz',
