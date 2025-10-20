@@ -10,10 +10,11 @@ interface ChatSidebarProps {
   currentThreadId?: string
   onNewChat: () => void
   onThreadSelect: (threadId: string) => void
+  onThreadDelete?: (threadId: string) => void
   sidebarOpen?: boolean
 }
 
-export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, sidebarOpen }: ChatSidebarProps) {
+export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, onThreadDelete, sidebarOpen }: ChatSidebarProps) {
   const [threads, setThreads] = useState<Thread[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -52,6 +53,23 @@ export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThr
     onThreadSelect(threadId)
   }
 
+  const handleDeleteThread = async (threadId: string, e: React.MouseEvent) => {
+    e.stopPropagation() // Предотвращаем клик по чату
+    
+    if (confirm('Вы уверены, что хотите удалить этот чат?')) {
+      try {
+        await threadService.deleteThread(threadId)
+        loadThreads() // Обновляем список
+        if (onThreadDelete) {
+          onThreadDelete(threadId)
+        }
+      } catch (error) {
+        console.error('Ошибка удаления чата:', error)
+        alert('Не удалось удалить чат')
+      }
+    }
+  }
+
   return (
     <div className={`w-64 bg-neutral-50 border-r border-neutral-200 flex flex-col fixed left-0 top-0 h-full z-50 md:translate-x-0 transition-transform duration-300 ${
       sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
@@ -83,27 +101,39 @@ export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThr
             </div>
           ) : (
             threads.map((thread) => (
-              <button
+              <div
                 key={thread.id}
-                onClick={() => handleThreadClick(thread.id)}
-                className={`w-full text-left px-3 py-3 rounded-lg transition-colors group ${
+                className={`w-full px-3 py-3 rounded-lg transition-colors group relative ${
                   currentThreadId === thread.id 
                     ? 'bg-violet-100 text-violet-900 border border-violet-200' 
                     : 'hover:bg-neutral-100'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium truncate">{thread.title}</div>
-                    <div className="text-xs text-neutral-500 mt-1">
-                      {formatTimeAgo(thread.created_at)}
+                <button
+                  onClick={() => handleThreadClick(thread.id)}
+                  className="w-full text-left"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0 pr-8">
+                      <div className="text-sm font-medium truncate">{thread.title}</div>
+                      <div className="text-xs text-neutral-500 mt-1">
+                        {formatTimeAgo(thread.created_at)}
+                      </div>
                     </div>
                   </div>
-                  <svg className="w-4 h-4 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                </button>
+                
+                {/* Кнопка удаления */}
+                <button
+                  onClick={(e) => handleDeleteThread(thread.id, e)}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded hover:bg-red-100 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Удалить чат"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
-                </div>
-              </button>
+                </button>
+              </div>
             ))
           )}
         </div>

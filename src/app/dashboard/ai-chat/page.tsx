@@ -43,6 +43,13 @@ export default function AIChatPage() {
     setCurrentThreadId(threadId)
   }
 
+  const handleThreadDelete = (threadId: string) => {
+    // Если удаляем текущий чат, очищаем его
+    if (currentThreadId === threadId) {
+      setCurrentThreadId(undefined)
+    }
+  }
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex">
@@ -60,6 +67,7 @@ export default function AIChatPage() {
           currentThreadId={currentThreadId}
           onNewChat={handleNewChat}
           onThreadSelect={handleThreadSelect}
+          onThreadDelete={handleThreadDelete}
           sidebarOpen={sidebarOpen}
         />
 
@@ -83,7 +91,14 @@ export default function AIChatPage() {
                   <span className="text-white text-sm font-semibold">ST</span>
                 </div>
                 <div>
-                  <h1 className="text-lg font-semibold text-neutral-900">Smart Teacher</h1>
+                  <h1 className="text-lg font-semibold text-neutral-900">
+                    Smart Teacher
+                    {currentThreadId && (
+                      <span className="text-sm font-normal text-violet-600 ml-2">
+                        • Чат сохранен
+                      </span>
+                    )}
+                  </h1>
                   <p className="text-sm text-neutral-500 hidden md:block">Ваш ИИ-помощник для образования</p>
                 </div>
               </div>

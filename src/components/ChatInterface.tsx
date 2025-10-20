@@ -68,7 +68,7 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
       if (!currentThreadId && classId) {
         const newThread = await threadService.createThread({
           class_id: classId,
-          title: userMessage.content.substring(0, 50) + (userMessage.content.length > 50 ? '...' : '')
+          title: userMessage.content.substring(0, 30) + (userMessage.content.length > 30 ? '...' : '')
         })
         currentThreadId = newThread.id
         
