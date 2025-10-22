@@ -2,15 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { aiService, type ChatMessage } from '@/lib/openai'
-import { materialService } from '@/lib/database'
 import PDFExporter from './PDFExporter'
 
 interface ClassChatProps {
-  classId: string
   className: string
 }
 
-export default function ClassChat({ classId, className }: ClassChatProps) {
+export default function ClassChat({ className }: ClassChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -50,52 +48,11 @@ export default function ClassChat({ classId, className }: ClassChatProps) {
 
       setMessages(prev => [...prev, assistantMessage])
 
-      // Автоматически сохраняем материалы если ИИ создал их
-      await handleAutoSaveMaterials(userMessage.content, aiResponse)
-
     } catch (error) {
       console.error('Ошибка отправки сообщения:', error)
       setError('Не удалось отправить сообщение. Проверьте подключение к интернету.')
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const handleAutoSaveMaterials = async (userPrompt: string, aiResponse: string) => {
-    try {
-      // Определяем тип материала по ключевым словам
-      const prompt = userPrompt.toLowerCase()
-      const response = aiResponse.toLowerCase()
-
-      let materialType: 'lesson_plan' | 'presentation' | 'test' | 'document' | null = null
-      let title = ''
-
-      if (prompt.includes('план урока') || prompt.includes('урок') || response.includes('план урока')) {
-        materialType = 'lesson_plan'
-        title = `План урока для ${className}`
-      } else if (prompt.includes('презентация') || prompt.includes('презентация') || response.includes('презентация') || response.includes('слайд')) {
-        materialType = 'presentation'
-        title = `Презентация для ${className}`
-      } else if (prompt.includes('тест') || prompt.includes('задание') || response.includes('тест') || response.includes('вопрос')) {
-        materialType = 'test'
-        title = `Тест для ${className}`
-      } else if (prompt.includes('документ') || prompt.includes('файл') || response.includes('документ')) {
-        materialType = 'document'
-        title = `Документ для ${className}`
-      }
-
-      // Если определили тип материала, сохраняем его
-      if (materialType) {
-        await materialService.createMaterial({
-          class_id: classId,
-          type: materialType,
-          title,
-          content: aiResponse,
-          ai_generated: true
-        })
-      }
-    } catch (error) {
-      console.error('Ошибка автосохранения:', error)
     }
   }
 
@@ -135,8 +92,6 @@ export default function ClassChat({ classId, className }: ClassChatProps) {
 
         setMessages(prev => [...prev, assistantMessage])
         
-        // Автоматически сохраняем материал
-        await handleAutoSaveMaterials(prompt, aiResponse)
       } catch (error) {
         console.error('Ошибка при обращении к ИИ:', error)
         setError('Не удалось получить ответ от ИИ. Попробуйте еще раз.')

@@ -224,7 +224,7 @@ export default function ClassDetailPage() {
             <div className="max-w-6xl mx-auto">
               {activeSection === 'chat' && (
                 <div className="h-full">
-                  <ClassChat classId={classId} className={classData.title} />
+                  <ClassChat className={classData.title} />
                 </div>
               )}
 
