@@ -12,9 +12,10 @@ interface ChatSidebarProps {
   onThreadSelect: (threadId: string) => void
   onThreadDelete?: (threadId: string) => void
   sidebarOpen?: boolean
+  refreshTrigger?: number // Добавляем триггер для обновления
 }
 
-export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, onThreadDelete, sidebarOpen }: ChatSidebarProps) {
+export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThreadSelect, onThreadDelete, sidebarOpen, refreshTrigger }: ChatSidebarProps) {
   const [threads, setThreads] = useState<Thread[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -44,6 +45,13 @@ export default function ChatSidebar({ classId, currentThreadId, onNewChat, onThr
       loadThreads()
     }
   }, [currentThreadId, classId, loadThreads])
+
+  // Обновляем список при изменении refreshTrigger
+  useEffect(() => {
+    if (refreshTrigger && classId) {
+      loadThreads()
+    }
+  }, [refreshTrigger, classId, loadThreads])
 
   const handleNewChat = () => {
     onNewChat()

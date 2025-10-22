@@ -8,9 +8,10 @@ interface ChatInterfaceProps {
   threadId?: string
   classId?: string
   onNewThread?: (threadId: string) => void
+  onMessageCountChange?: (count: number) => void
 }
 
-export default function ChatInterface({ threadId, classId, onNewThread }: ChatInterfaceProps) {
+export default function ChatInterface({ threadId, classId, onNewThread, onMessageCountChange }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -39,12 +40,22 @@ export default function ChatInterface({ threadId, classId, onNewThread }: ChatIn
   useEffect(() => {
     if (threadId) {
       loadMessages()
+    } else {
+      // Очищаем сообщения при создании нового чата
+      setMessages([])
     }
   }, [threadId, loadMessages])
 
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Уведомляем о изменении количества сообщений
+  useEffect(() => {
+    if (onMessageCountChange) {
+      onMessageCountChange(messages.length)
+    }
+  }, [messages.length, onMessageCountChange])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()

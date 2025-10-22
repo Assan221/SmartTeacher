@@ -13,6 +13,8 @@ export default function AIChatPage() {
   const [selectedClassId, setSelectedClassId] = useState<string | undefined>()
   const [classes, setClasses] = useState<Class[]>([])
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const [messageCount, setMessageCount] = useState(0)
 
   const loadClasses = useCallback(async () => {
     try {
@@ -41,6 +43,8 @@ export default function AIChatPage() {
 
   const handleNewThread = (threadId: string) => {
     setCurrentThreadId(threadId)
+    // Обновляем список чатов
+    setRefreshTrigger(prev => prev + 1)
   }
 
   const handleThreadDelete = (threadId: string) => {
@@ -69,6 +73,7 @@ export default function AIChatPage() {
           onThreadSelect={handleThreadSelect}
           onThreadDelete={handleThreadDelete}
           sidebarOpen={sidebarOpen}
+          refreshTrigger={refreshTrigger}
         />
 
         {/* Основная область чата в стиле ChatGPT */}
@@ -95,7 +100,7 @@ export default function AIChatPage() {
                     Smart Teacher
                     {currentThreadId && (
                       <span className="text-sm font-normal text-violet-600 ml-2">
-                        • Чат сохранен
+                        • Чат сохранен ({messageCount} сообщений)
                       </span>
                     )}
                   </h1>
@@ -136,6 +141,7 @@ export default function AIChatPage() {
               threadId={currentThreadId}
               classId={selectedClassId}
               onNewThread={handleNewThread}
+              onMessageCountChange={setMessageCount}
             />
           </div>
         </div>
