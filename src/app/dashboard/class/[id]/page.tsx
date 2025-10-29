@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Link from 'next/link'
 import { classService, materialService } from '@/lib/database'
-import ClassChatInterface from '@/components/ClassChatInterface'
+import ClassChat from '@/components/ClassChat'
 import PDFExporter from '@/components/PDFExporter'
 import { getSubjectColor, formatTimeAgo } from '@/utils/subjectColors'
 import type { Class, Material } from '@/types/database'
@@ -224,7 +224,7 @@ export default function ClassDetailPage() {
             <div className="max-w-6xl mx-auto">
               {activeSection === 'chat' && (
                 <div className="h-full">
-                  <ClassChatInterface classId={classId} className={classData.title} />
+                  <ClassChat className={classData.title} />
                 </div>
               )}
 

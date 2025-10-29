@@ -35,6 +35,7 @@ export default function AIChatPage() {
 
   const handleNewChat = () => {
     setCurrentThreadId(undefined)
+    setMessageCount(0) // Очищаем счетчик сообщений
   }
 
   const handleThreadSelect = (threadId: string) => {

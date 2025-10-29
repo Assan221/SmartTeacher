@@ -17,6 +17,7 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -49,6 +50,11 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Автофокус на поле ввода при открытии страницы/создании нового чата
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [threadId])
 
   // Уведомляем о изменении количества сообщений
   useEffect(() => {
@@ -136,7 +142,7 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm max-w-3xl mx-auto">
                 <button 
-                  onClick={() => setInputMessage('Создай презентацию по математике для 5 класса')}
+                  onClick={() => { setInputMessage('Создай презентацию по математике для 5 класса'); inputRef.current?.focus() }}
                   className="p-4 text-left border border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-200 group"
                 >
                   <div className="flex items-center gap-3">
@@ -145,7 +151,7 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
                   </div>
                 </button>
                 <button 
-                  onClick={() => setInputMessage('Создай домашнее задание по физике на тему "Электричество"')}
+                  onClick={() => { setInputMessage('Создай домашнее задание по физике на тему "Электричество"'); inputRef.current?.focus() }}
                   className="p-4 text-left border border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-200 group"
                 >
                   <div className="flex items-center gap-3">
@@ -154,7 +160,7 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
                   </div>
                 </button>
                 <button 
-                  onClick={() => setInputMessage('Помоги создать интерактивные задания по истории России 19 века')}
+                  onClick={() => { setInputMessage('Помоги создать интерактивные задания по истории России 19 века'); inputRef.current?.focus() }}
                   className="p-4 text-left border border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-200 group"
                 >
                   <div className="flex items-center gap-3">
@@ -179,11 +185,11 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
                 </div>
               )}
               
-              <div
+                <div
                 className={`max-w-[80%] ${
                   message.role === 'user'
                     ? 'bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-sm'
-                    : 'bg-neutral-100 text-neutral-900 rounded-2xl rounded-bl-md px-4 py-3 border border-neutral-200'
+                    : 'bg-neutral-100 text-neutral-900 rounded-2xl rounded-bl-md px-4 py-3 border border-neutral-200 shadow-sm'
                 }`}
               >
                 <div className="prose prose-sm max-w-none">
@@ -220,7 +226,7 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
       </div>
 
       {/* Поле ввода */}
-      <div className="border-t border-neutral-200 p-4 bg-white">
+      <div className="border-t border-neutral-200 p-4 bg-white sticky bottom-0">
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm max-w-4xl mx-auto">
             {error}
@@ -232,6 +238,7 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
             <div className="flex items-end gap-3">
               <div className="flex-1 relative">
                 <textarea
+                  ref={inputRef}
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   placeholder="Сообщение Smart Teacher..."
@@ -239,7 +246,7 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
                   disabled={isLoading}
                   rows={1}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
+                    if ((e.key === 'Enter' && !e.shiftKey) || (e.key === 'Enter' && (e.metaKey || e.ctrlKey))) {
                       e.preventDefault()
                       handleSendMessage(e)
                     }
@@ -250,9 +257,16 @@ export default function ChatInterface({ threadId, classId, onNewThread, onMessag
                   disabled={isLoading || !inputMessage.trim()}
                   className="absolute right-2 bottom-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white p-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:from-violet-700 hover:to-purple-700 transition-all duration-200 shadow-sm"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
+                  {isLoading ? (
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                  )}
                 </button>
               </div>
             </div>
